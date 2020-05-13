@@ -1,0 +1,37 @@
+{
+  "name": "cartapus",
+  "version": "1.0.0",
+  "description": "\"On me voit. On me voit plus. On me voit un peu, on me voit plus.\" - Cartapus (2002)",
+  "source": "src/cartapus.js",
+  "main": "build/cartapus.js",
+  "umd:main": "build/cartapus.umd.js",
+  "module": "build/cartapus.module.js",
+  "unpkg": "build/cartapus.umd.js",
+  "scripts": {
+    "clean": "rm -rf build/**",
+    "build": "npm run clean && microbundle --external none",
+    "watch": "microbundle watch --external none",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiervoj/cartapus.git"
+  },
+  "keywords": [
+    "reveal",
+    "animations",
+    "javascript",
+    "scroll",
+    "viewport"
+  ],
+  "author": "Jordan Thiervoz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thiervoj/cartapus/issues"
+  },
+  "homepage": "https://github.com/thiervoj/cartapus#readme",
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "microbundle": "^0.12.0"
+  }
+}
