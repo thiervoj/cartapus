@@ -9,11 +9,11 @@ export default class Cartapus extends Emitter {
 
   /**
    * @param {object} [options] — User options.
-   * @param {object} [options.root=null] — The root DOM element into which [data-cartapus] targets will be watched.
+   * @param {Element} [options.root=null] — The root DOM element into which [data-cartapus] targets will be watched.
    * @param {string} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
    * @param {number} [options.threshold=0.2] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
    * @param {boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
-   * @param {boolean} [options.event=false] — If "true", events will be trigger when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
+   * @param {boolean} [options.event=false] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
    *
    * @extends Emitter
    * @constructor

@@ -1,7 +1,7 @@
 {
   "name": "cartapus",
   "version": "1.0.0",
-  "description": "\"On me voit. On me voit plus. On me voit un peu, on me voit plus.\" - Cartapus (2002)",
+  "description": "✨ Animate DOM elements as they appear in your window. \"On me voit. On me voit plus. On me voit un peu, on me voit plus.\" - Cartapus (2002)",
   "source": "src/cartapus.js",
   "main": "build/cartapus.js",
   "umd:main": "build/cartapus.umd.js",
