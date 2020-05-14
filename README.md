@@ -37,7 +37,7 @@ Now, add `data-cartapus` attribute to any element you want to observe :
 <div class="box" data-cartapus></div>
 ```
 
-When this element will be visible in the viewport, its attribute will switch to `data-cartapus="visible"`. Allowing you to adapt your CSS to easliy animate this element.
+When this element will be visible in the viewport, its attribute will switch to `data-cartapus="visible"`. Allowing you to adapt your CSS to easily animate this element.
 
 Here is a fade in example :
 
@@ -141,12 +141,16 @@ Some additional attributes are available to allow both of those cases overriding
 
 Some methods are available to turn on/off Cartapus programmatically :
 
+### `.unobserve()`
+
 ```javascript
 cartapus.unobserve()
 ```
 
 Stop observing **all** `[data-cartapus]` elements
 .
+
+### `.observe()`
 
 ```javascript
 cartapus.observe()
@@ -157,6 +161,8 @@ Start observing **all** `[data-cartapus]` elements
 
 > This method triggers instantly the `events` for **every** element.
 
+### `.reset()`
+
 ```javascript
 cartapus.reset()
 ```
@@ -165,4 +171,4 @@ Destroys the instance, clears all `[data-cartapus]` elements, then initializes t
 
 This is useful to refresh the list of observed elements in case they changed.
 
->This methods also triggers instantly the `events` for **every** new element.
+>This methods triggers instantly the `events` for **every** new element.
