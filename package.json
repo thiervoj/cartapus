@@ -1,10 +1,9 @@
 {
   "name": "cartapus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "✨ Animate DOM elements as they appear in your window. \"On me voit. On me voit plus. On me voit un peu, on me voit plus.\" - Cartapus (2002)",
   "source": "src/cartapus.js",
   "main": "build/cartapus.js",
-  "umd:main": "build/cartapus.umd.js",
   "module": "build/cartapus.module.js",
   "unpkg": "build/cartapus.umd.js",
   "scripts": {
@@ -31,8 +30,8 @@
   },
   "homepage": "https://github.com/thiervoj/cartapus#readme",
   "devDependencies": {
-    "eslint": "^7.0.0",
-    "microbundle": "^0.12.0"
+    "eslint": "^7.13.0",
+    "microbundle": "^0.12.4"
   },
   "dependencies": {
     "tiny-emitter": "^2.1.0"
