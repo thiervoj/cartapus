@@ -175,3 +175,10 @@ Cartapus supports **all recent major versions** of the following modern browsers
 - Edge
 
 Internally, Cartapus uses the `IntersectionObserver` API to observe elements. You can have more details about compatibility by consulting [CanIuse](https://caniuse.com/#feat=intersectionobserver).
+
+## Todo
+
+- [ ] Implement `add` and `remove` methods to add/remove specific items to/from the watched list.
+- [ ] Change `threshold` default value to `0`
+- [ ] Add a parameter to `.reset()` method to prevent the already visible items with `once = true` to reset their state.
+
