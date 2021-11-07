@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/thiervoj/cartapus#readme",
   "devDependencies": {
-    "eslint": "^7.13.0",
-    "microbundle": "^0.12.4"
+    "eslint": "^8.2.0",
+    "microbundle": "^0.14.1"
   },
   "dependencies": {
     "tiny-emitter": "^2.1.0"
