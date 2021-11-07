@@ -18,7 +18,7 @@ The goal of cartapus is to provide a **quick** and **performant** solution to th
 ### Install it
 
 ```bash
-$ npm add cartapus --save
+$ npm add cartapus
 ```
 
 ### Use it
@@ -64,7 +64,7 @@ Here are all the available options :
 const cartapus = new Cartapus({
   root: null,
   rootMargin: '0px',
-  threshold: 0.2,
+  threshold: 0,
   once: false,
   events: false
 })
@@ -76,11 +76,11 @@ const cartapus = new Cartapus({
 
 |     Option     |    Type     | Default | Description |
 | -------------- | ----------- | ------- | ----------- |
-|    **root**    | Element | `null` *(entire viewport)*  | The root DOM element into which `[data-cartapus]` targets will be observed. Default is set to `null`, which is equivalent to the entire viewport. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root)) |
+|    **root**    | Element | `document` *(entire viewport)*  | The root DOM element into which `[data-cartapus]` targets will be observed. Default is set to `document`, which is equivalent to the entire viewport. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root)) |
 | **rootMargin** | string | `'0px'` | A CSS margin property string defining offsets into the `root` element. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin)) |
-| **threshold**  | number | `0.2` | A number between `0` and `1` which defines the percentage of height that must be into the viewport for an element to be considered "visible". (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds)) |
+| **threshold**  | number | `0` | A number between `0` and `1` which defines the percentage of height that must be into the viewport for an element to be considered "visible". (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds)) |
 | **once** | boolean | `false` | If `true`, elements that are `visible` will never return to their `hidden` state even if they disappear from the `root`. |
-| **events** | boolean | `false` | If `true`, events will be triggered when an element changes its state. A `CustomEvent` is triggered on the related `Element`, and an event is also triggered on the Cartapus instance (Read the [Events part](#events) of the documentation for more information). |
+| **events** | boolean | `true` | By default, events will be triggered when an element changes its state. A `CustomEvent` is triggered on the related `Element`, and an event is also triggered on the Cartapus instance (Read the [Events part](#events) of the documentation for more information). |
 
 ## Events
 
@@ -179,6 +179,4 @@ Internally, Cartapus uses the `IntersectionObserver` API to observe elements. Yo
 ## Todo
 
 - [ ] Implement `add` and `remove` methods to add/remove specific items to/from the watched list.
-- [ ] Change `threshold` default value to `0`
 - [ ] Add a parameter to `.reset()` method to prevent the already visible items with `once = true` to reset their state.
-

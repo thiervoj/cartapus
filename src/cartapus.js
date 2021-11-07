@@ -5,15 +5,34 @@
 
 import Emitter from 'tiny-emitter'
 
+/**
+ * Creates a new Cartapus instance, starting to watch every `[data-cartapus]` elements' visibility right away.
+ *
+ * Usually you will only need to instanciate Cartapus once for your whole App.
+ *
+ * @param {Object} [options] — User options.
+ * @param {Element} [options.root=document] — The root DOM element into which [data-cartapus] targets will be watched.
+ * @param {String} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
+ * @param {Number} [options.threshold=0] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
+ * @param {Boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
+ * @param {Boolean} [options.event=true] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
+ *
+ * @extends Emitter
+ * @class
+ */
 export default class Cartapus extends Emitter {
 
   /**
-   * @param {object} [options] — User options.
-   * @param {Element} [options.root=null] — The root DOM element into which [data-cartapus] targets will be watched.
-   * @param {string} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
-   * @param {number} [options.threshold=0.2] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
-   * @param {boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
-   * @param {boolean} [options.event=false] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
+   * Creates a new Cartapus instance, starting to watch every `[data-cartapus]` elements' visibility right away.
+   *
+   * Usually you will only need to instanciate Cartapus once for your whole App.
+   *
+   * @param {Object} [options] — User options.
+   * @param {Element} [options.root=document] — The root DOM element into which [data-cartapus] targets will be watched.
+   * @param {String} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
+   * @param {Number} [options.threshold=0] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
+   * @param {Boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
+   * @param {Boolean} [options.event=true] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
    *
    * @extends Emitter
    * @constructor
@@ -26,11 +45,11 @@ export default class Cartapus extends Emitter {
 
     // Set user options based on default options.
     const defaults = {
-      root: null,
+      root: document,
       rootMargin: '0px',
-      threshold: 0.2,
+      threshold: 0,
       once: false,
-      events: false
+      events: true
     }
 
     this.options = Object.assign(defaults, options)
@@ -42,6 +61,9 @@ export default class Cartapus extends Emitter {
 
   /**
    * Creates the main IntersectionObserver used with the default options.
+   *
+   * @private
+   * @returns {void}
    */
   createMainObserver() {
     this.observers = [{
@@ -53,6 +75,9 @@ export default class Cartapus extends Emitter {
 
   /**
    * Initialization method, starts the IntersectionObservers.
+   *
+   * @private
+   * @returns {void}
    */
   init() {
     this.getElems()
@@ -61,15 +86,21 @@ export default class Cartapus extends Emitter {
   }
 
   /**
-   * Gets the [data-cartapus] elements from given root or from document.
+   * Gets the [data-cartapus] elements from root element.
+   *
+   * @private
+   * @returns {void}
    */
   getElems() {
-    this.elems = this.options.root ? this.options.root.querySelectorAll('[data-cartapus]') : document.querySelectorAll('[data-cartapus]')
+    this.elems = this.options.root.querySelectorAll('[data-cartapus]')
   }
 
   /**
    * For each [data-cartapus] element, check its inner data-cartapus parameters
    * Create new IntersectionObservers accordingly if parameters differs from the main observer.
+   *
+   * @private
+   * @returns {void}
    */
   createObservers() {
     for (const el of this.elems) {
@@ -108,6 +139,9 @@ export default class Cartapus extends Emitter {
    *
    * @param {array.<IntersectionObserverEntry>} entries — An array of entries that intersected with the root.
    * @param {IntersectionObserver} observer — The observer that triggered the event.
+   *
+   * @private
+   * @returns {void}
    */
   intersect(entries, observer) {
     entries.forEach((entry) => {
@@ -128,24 +162,31 @@ export default class Cartapus extends Emitter {
    * Also triggers an `intersect` event on the class instance.
    *
    * @param {IntersectionObserverEntry} entry — The entry that intersected.
+   *
+   * @private
+   * @returns {void}
    */
   dispatch(entry) {
     // Create event with details.
-    const data = {
+    const detail = {
       element: entry.target,
       visible: entry.isIntersecting,
       intersection: entry
     }
-    const event = new CustomEvent('cartapusintersect', { detail: data })
+    const event = new CustomEvent('cartapusintersect', { detail })
 
     // Dispatch element and instance events.
     entry.target.dispatchEvent(event)
-    this.emit('intersect', data)
+    this.emit('intersect', detail)
   }
 
   /**
    * Turns on all the observers to watch all of their related targets.
+   *
    * This will trigger Cartapus events if events are turned on.
+   *
+   * @public
+   * @returns {void}
    */
   observe() {
     this.observers.forEach((observer) => {
@@ -157,6 +198,9 @@ export default class Cartapus extends Emitter {
 
   /**
    * Turns off all the observers to stop watching all of their related targets.
+   *
+   * @public
+   * @returns {void}
    */
   unobserve() {
     this.observers.forEach((observer) => {
@@ -168,6 +212,9 @@ export default class Cartapus extends Emitter {
 
   /**
    * Turns off observers and empty their related targets.
+   *
+   * @public
+   * @returns {void}
    */
   destroy() {
     this.unobserve()
@@ -178,10 +225,13 @@ export default class Cartapus extends Emitter {
   }
 
   /**
-   * Reset everything.
+   * Resets everything.
    * Turns off observers and resets their targets.
    * Then calls `this.init()` to restart everything with new elements to observe.
    * This will trigger Cartapus events if events are turned on.
+   *
+   * @public
+   * @returns {void}
    */
   reset() {
     this.destroy()
