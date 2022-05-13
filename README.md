@@ -18,7 +18,9 @@ The goal of cartapus is to provide a **quick** and **performant** solution to th
 ### Install it
 
 ```bash
-$ npm add cartapus
+$ npm i cartapus
+$ # OR
+$ yarn add cartapus
 ```
 
 ### Use it
@@ -76,7 +78,7 @@ const cartapus = new Cartapus({
 
 |     Option     |    Type     | Default | Description |
 | -------------- | ----------- | ------- | ----------- |
-|    **root**    | Element | `document` *(entire viewport)*  | The root DOM element into which `[data-cartapus]` targets will be observed. Default is set to `document`, which is equivalent to the entire viewport. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root)) |
+|    **root**    | Element | `null` *(entire viewport)*  | The root DOM element into which `[data-cartapus]` targets will be observed. Default is set to `null`, which is equivalent to the entire viewport. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root)) |
 | **rootMargin** | string | `'0px'` | A CSS margin property string defining offsets into the `root` element. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin)) |
 | **threshold**  | number | `0` | A number between `0` and `1` which defines the percentage of height that must be into the viewport for an element to be considered "visible". (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds)) |
 | **once** | boolean | `false` | If `true`, elements that are `visible` will never return to their `hidden` state even if they disappear from the `root`. |
