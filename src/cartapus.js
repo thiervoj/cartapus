@@ -92,7 +92,8 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   getElems() {
-    this.elems = this.options.root.querySelectorAll('[data-cartapus]')
+    const root = (this.options.root === null) ? document : this.options.root
+    this.elems = root.querySelectorAll('[data-cartapus]')
   }
 
   /**
