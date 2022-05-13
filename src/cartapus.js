@@ -45,7 +45,7 @@ export default class Cartapus extends Emitter {
 
     // Set user options based on default options.
     const defaults = {
-      root: document,
+      root: null,
       rootMargin: '0px',
       threshold: 0,
       once: false,
@@ -92,7 +92,8 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   getElems() {
-    this.elems = this.options.root.querySelectorAll('[data-cartapus]')
+    const root = (this.options.root === null) ? document : this.options.root
+    this.elems = root.querySelectorAll('[data-cartapus]')
   }
 
   /**
