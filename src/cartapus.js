@@ -45,7 +45,7 @@ export default class Cartapus extends Emitter {
 
     // Set user options based on default options.
     const defaults = {
-      root: document,
+      root: null,
       rootMargin: '0px',
       threshold: 0,
       once: false,
