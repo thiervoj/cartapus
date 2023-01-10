@@ -136,11 +136,13 @@ Some additional attributes are available to allow both of those cases, overridin
 <div class="box"
   data-cartapus
   data-cartapus-threshold="0.5"
+  data-cartapus-root-margin="0px 0px -200px 0px"
   data-cartapus-once="true">
 </div>
 ```
 
 - `data-cartapus-threshold` : overrides the `threshold` option. *Ie : this element will be visible when 50% of its height is visible.*
+- `data-cartapus-root-margin` : overrides the `rootMargin` option. *Ie : the bottom bounding box of this element will be shrunk of 200px.*
 - `data-cartapus-once` : overrides the `once` option. *Ie : this element will switch to `visible`, then never switch back to `hidden` again.*
 
 ## Methods

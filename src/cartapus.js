@@ -69,6 +69,7 @@ export default class Cartapus extends Emitter {
     this.observers = [{
       observer: new IntersectionObserver(this.intersect, this.options),
       threshold: this.options.threshold,
+      rootMargin: this.options.rootMargin,
       elements: []
     }]
   }
@@ -107,24 +108,26 @@ export default class Cartapus extends Emitter {
   createObservers() {
     for (const el of this.elems) {
       // If element has data-cartapus-threshold attribute.
-      if (el.dataset.cartapusThreshold) {
-        const threshold = parseFloat(el.dataset.cartapusThreshold)
+      if (el.dataset.cartapusThreshold || el.dataset.cartapusRootMargin) {
+        const threshold = el.dataset.cartapusThreshold ? parseFloat(el.dataset.cartapusThreshold) : this.options.threshold
+        const rootMargin = el.dataset.cartapusRootMargin ? el.dataset.cartapusRootMargin : this.options.rootMargin
         let found = false
 
-        // If an observer already exists with the same threshold, add element to this observer.
+        // If an observer already exists with the same threshold & the same rootMargin, add element to this observer.
         for (const observer of this.observers) {
-          if (threshold === observer.threshold) {
+          if (threshold === observer.threshold && rootMargin === observer.rootMargin) {
             found = true
 
             observer.elements.push(el)
           }
         }
 
-        // If no observer has the same threshold, create a new one with the new threshold.
+        // If no observer has the same threshold & rootMargin, create a new one with the new options.
         if (!found) {
           const observer = {
-            observer: new IntersectionObserver(this.intersect, Object.assign(this.options, { threshold })),
+            observer: new IntersectionObserver(this.intersect, Object.assign(this.options, { threshold, rootMargin })),
             threshold,
+            rootMargin,
             elements: [el]
           }
 
