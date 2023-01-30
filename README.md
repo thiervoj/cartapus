@@ -9,9 +9,9 @@
 
 ## What is cartapus.js ?
 
-cartapus is an **ES6** JavaScript library designed to help you manage detection of elements in the browser's viewport.
+cartapus is a library designed to help you manage detection of elements in the browser's viewport.
 
-The goal of cartapus is to provide a **quick** and **performant** solution to those who need to **animate/manipulate** elements when they **appear/disappear** from the screen.
+The goal of cartapus is to provide a **quick** and **easy to use** solution to those who need to **animate/manipulate** elements when they **appear/disappear** from the screen, using the `IntersectionObserver` API.
 
 ## Getting started
 
@@ -19,8 +19,6 @@ The goal of cartapus is to provide a **quick** and **performant** solution to th
 
 ```bash
 $ npm i cartapus
-$ # OR
-$ yarn add cartapus
 ```
 
 ### Use it
@@ -33,7 +31,7 @@ import Cartapus from 'cartapus'
 const cartapus = new Cartapus()
 ```
 
-Now, add `data-cartapus` attribute to any element you want to observe :
+Now, add `data-cartapus` attribute to any element you need to observe :
 
 ```html
 <div class="box" data-cartapus></div>
@@ -67,8 +65,7 @@ const cartapus = new Cartapus({
   root: null,
   rootMargin: '0px',
   threshold: 0,
-  once: false,
-  events: false
+  once: false
 })
 ```
 
@@ -82,11 +79,10 @@ const cartapus = new Cartapus({
 | **rootMargin** | string | `'0px'` | A CSS margin property string defining offsets into the `root` element. (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin)) |
 | **threshold**  | number | `0` | A number between `0` and `1` which defines the percentage of height that must be into the viewport for an element to be considered "visible". (More information [here](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds)) |
 | **once** | boolean | `false` | If `true`, elements that are `visible` will never return to their `hidden` state even if they disappear from the `root`. |
-| **events** | boolean | `true` | By default, events will be triggered when an element changes its state. A `CustomEvent` is triggered on the related `Element`, and an event is also triggered on the Cartapus instance (Read the [Events part](#events) of the documentation for more information). |
 
 ## Events
 
-When the `events` option is set to `true`, Cartapus will trigger events when any element changes its state to `visible` or `hidden`.
+Cartapus will trigger events when an element changes its state to `visible` or `hidden`.
 
 > Events are called for **all** elements **immediately** after initializing Cartapus, providing you their *initial visibility state*.
 
@@ -142,7 +138,7 @@ Some additional attributes are available to allow both of those cases, overridin
 ```
 
 - `data-cartapus-threshold` : overrides the `threshold` option. *Ie : this element will be visible when 50% of its height is visible.*
-- `data-cartapus-root-margin` : overrides the `rootMargin` option. *Ie : the bottom bounding box of this element will be shrunk of 200px.*
+- `data-cartapus-root-margin` : overrides the `rootMargin` option. *Ie : the bottom bounding box of this element will be shrunk by 200px.*
 - `data-cartapus-once` : overrides the `once` option. *Ie : this element will switch to `visible`, then never switch back to `hidden` again.*
 
 ## Methods
@@ -171,12 +167,7 @@ This is useful to refresh the list of observed elements in case they changed.
 
 ## Browser support
 
-Cartapus supports **all recent major versions** of the following modern browsers :
-
-- Google Chrome
-- Firefox
-- Safari
-- Edge
+Cartapus supports **all recent major versions** of the following modern browsers
 
 Internally, Cartapus uses the `IntersectionObserver` API to observe elements. You can have more details about compatibility by consulting [CanIuse](https://caniuse.com/#feat=intersectionobserver).
 

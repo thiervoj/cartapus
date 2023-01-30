@@ -21,7 +21,6 @@ import Emitter from 'tiny-emitter'
  * @class
  */
 export default class Cartapus extends Emitter {
-
   /**
    * Creates a new Cartapus instance, starting to watch every `[data-cartapus]` elements' visibility right away.
    *

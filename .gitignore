@@ -2,4 +2,4 @@
 .cache
 .idea
 node_modules/
-dev/
+yarn-error.log
