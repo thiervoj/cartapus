@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cartapus website</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Cartapus</h1>
+
+      <div class="wrapper">
+        <div class="card" data-cartapus><p>Default config</p></div>
+        <div class="card" data-cartapus data-cartapus-once><p>Only watched once</p></div>
+        <div class="card" data-cartapus data-cartapus-root-margin="-35% 0px"><p>30% viewport rootMargin</p></div>
+        <div class="card" data-cartapus data-cartapus-threshold="0.2"><p>20% threshold</p></div>
+        <div class="card" data-cartapus><p>Am I visible ?</p></div>
+      </div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

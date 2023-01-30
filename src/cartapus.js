@@ -15,7 +15,6 @@ import Emitter from 'tiny-emitter'
  * @param {String} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
  * @param {Number} [options.threshold=0] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
  * @param {Boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
- * @param {Boolean} [options.event=true] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
  *
  * @extends Emitter
  * @class
@@ -31,7 +30,6 @@ export default class Cartapus extends Emitter {
    * @param {String} [options.rootMargin="0px"] — A CSS margin property string defining offsets into the `root` element.
    * @param {Number} [options.threshold=0] — A number between 0 and 1 which defines the percentage of height that must be into the viewport for an element to be considered "visible".
    * @param {Boolean} [options.once=false] — If "true", elements will only toggle to "visible" once and never return to their "hidden" state.
-   * @param {Boolean} [options.event=true] — If "true", events will be triggered when an element changes its state. A CustomEvent is triggered on the related element, and an event is also triggered on the Cartapus instance.
    *
    * @extends Emitter
    * @constructor
@@ -47,39 +45,14 @@ export default class Cartapus extends Emitter {
       root: null,
       rootMargin: '0px',
       threshold: 0,
-      once: false,
-      events: true
+      once: false
     }
 
     this.options = Object.assign(defaults, options)
 
-    // Creates the default observer then start.
-    this.createMainObserver()
-    this.init()
-  }
+    // Creates the main IntersectionObserver used with the default options.
+    this.observers = [this.createObserver()]
 
-  /**
-   * Creates the main IntersectionObserver used with the default options.
-   *
-   * @private
-   * @returns {void}
-   */
-  createMainObserver() {
-    this.observers = [{
-      observer: new IntersectionObserver(this.intersect, this.options),
-      threshold: this.options.threshold,
-      rootMargin: this.options.rootMargin,
-      elements: []
-    }]
-  }
-
-  /**
-   * Initialization method, starts the IntersectionObservers.
-   *
-   * @private
-   * @returns {void}
-   */
-  init() {
     this.getElems()
     this.createObservers()
     this.observe()
@@ -92,7 +65,7 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   getElems() {
-    const root = this.options.root === null ? document : this.options.root
+    const root = this.options.root ? this.options.root : document
 
     this.elems = root.querySelectorAll('[data-cartapus]')
   }
@@ -106,40 +79,44 @@ export default class Cartapus extends Emitter {
    */
   createObservers() {
     for (const el of this.elems) {
-      // If element has data-cartapus-threshold attribute.
+      // If element has a custom cartapus attribute.
       if (el.dataset.cartapusThreshold || el.dataset.cartapusRootMargin) {
         const threshold = el.dataset.cartapusThreshold ? parseFloat(el.dataset.cartapusThreshold) : this.options.threshold
         const rootMargin = el.dataset.cartapusRootMargin ? el.dataset.cartapusRootMargin : this.options.rootMargin
-        let found = false
 
         // If an observer already exists with the same threshold & the same rootMargin, add element to this observer.
-        for (const observer of this.observers) {
-          if (threshold === observer.threshold && rootMargin === observer.rootMargin) {
-            found = true
+        const found = this.observers.find((observer) => observer.threshold === threshold && observer.rootMargin === rootMargin)
 
-            observer.elements.push(el)
-          }
-        }
-
-        // If no observer has the same threshold & rootMargin, create a new one with the new options.
-        if (!found) {
-          const observer = {
-            observer: new IntersectionObserver(this.intersect, Object.assign(this.options, { threshold, rootMargin })),
-            threshold,
-            rootMargin,
-            elements: [el]
-          }
-
-          this.observers.push(observer)
+        if (found) found.elements.push(el)
+        else {
+          // If no observer has the same threshold & rootMargin, create a new one with the new options.
+          this.observers.push(this.createObserver({
+            element: el,
+            options: {
+              threshold,
+              rootMargin
+            }
+          }))
         }
       } else this.observers[0].elements.push(el)
+    }
+  }
+
+  createObserver({ options, element } = {}) {
+    const opt = Object.assign(this.options, options)
+
+    return {
+      observer: new IntersectionObserver(this.intersect, opt),
+      threshold: opt.threshold,
+      rootMargin: opt.rootMargin,
+      elements: element ? [element] : []
     }
   }
 
   /**
    * Callback function triggered by the observers.
    * Sets the data-cartapus attribute accordingly to the visibility of the elements.
-   * Triggers the custom events if the `events` option is enabled.
+   * Triggers the custom events.
    *
    * @param {array.<IntersectionObserverEntry>} entries — An array of entries that intersected with the root.
    * @param {IntersectionObserver} observer — The observer that triggered the event.
@@ -148,17 +125,17 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   intersect(entries, observer) {
-    entries.forEach((entry) => {
+    for (const entry of entries) {
       // Set data-cartapus attribute value either to "visible" or "hidden".
       if (entry.isIntersecting) {
-        entry.target.dataset.cartapus = 'visible'
+        entry.target.setAttribute('data-cartapus', 'visible')
 
         // Stop observing this element if "once" options it true.
-        if (this.options.once && entry.target.dataset.cartapusOnce !== 'false') observer.unobserve(entry.target)
-      } else entry.target.dataset.cartapus = 'hidden'
+        if (entry.target.hasAttribute('data-cartapus-once')) observer.unobserve(entry.target)
+      } else entry.target.setAttribute('data-cartapus', 'hidden')
 
-      if (this.options.events) this.dispatch(entry)
-    })
+      this.dispatch(entry)
+    }
   }
 
   /**
@@ -187,17 +164,19 @@ export default class Cartapus extends Emitter {
   /**
    * Turns on all the observers to watch all of their related targets.
    *
-   * This will trigger Cartapus events if events are turned on.
+   * This will trigger Cartapus events.
    *
    * @public
    * @returns {void}
    */
   observe() {
-    this.observers.forEach((observer) => {
-      observer.elements.forEach((el) => {
+    for (const observer of this.observers) {
+      for (const el of observer.elements) {
+        el._cartapus = observer
+
         observer.observer.observe(el)
-      })
-    })
+      }
+    }
   }
 
   /**
@@ -207,11 +186,11 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   unobserve() {
-    this.observers.forEach((observer) => {
-      observer.elements.forEach((el) => {
+    for (const observer of this.observers) {
+      for (const el of observer.elements) {
         observer.observer.unobserve(el)
-      })
-    })
+      }
+    }
   }
 
   /**
@@ -223,16 +202,17 @@ export default class Cartapus extends Emitter {
   destroy() {
     this.unobserve()
 
-    this.observers.forEach((observer) => {
+    for (const observer of this.observers) {
+      observer.observer.disconnect()
       observer.elements = []
-    })
+    }
   }
 
   /**
    * Resets everything.
    * Turns off observers and resets their targets.
    * Then calls `this.init()` to restart everything with new elements to observe.
-   * This will trigger Cartapus events if events are turned on.
+   * This will trigger Cartapus events.
    *
    * @public
    * @returns {void}

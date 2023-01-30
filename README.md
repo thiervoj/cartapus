@@ -133,7 +133,7 @@ Some additional attributes are available to allow both of those cases, overridin
   data-cartapus
   data-cartapus-threshold="0.5"
   data-cartapus-root-margin="0px 0px -200px 0px"
-  data-cartapus-once="true">
+  data-cartapus-once>
 </div>
 ```
 
@@ -145,15 +145,17 @@ Some additional attributes are available to allow both of those cases, overridin
 
 Some methods are available, to turn on/off Cartapus programmatically :
 
+### `.destroy()`
+
+Stops observing **all** `[data-cartapus]` elements. And disconnects all the `IntersectionObservers`.
+
 ### `.unobserve()`
 
-Stops observing **all** `[data-cartapus]` elements
-.
+Stops observing **all** `[data-cartapus]` elements.
 
 ### `.observe()`
 
-Starts observing **all** `[data-cartapus]` elements
-.
+Starts observing **all** `[data-cartapus]` elements.
 
 > This method triggers instantly the `events` for **every** element.
 

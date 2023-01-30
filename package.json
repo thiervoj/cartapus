@@ -1,30 +1,40 @@
 {
   "name": "cartapus",
   "version": "1.1.2",
-  "description": "✨ Animate DOM elements as they appear in your window. \"On me voit. On me voit plus. On me voit un peu, on me voit plus.\" - Cartapus (2002)",
+  "description": "✨ Animate DOM elements as they appear in your window. A small `IntersectionObserver` wrapper and helper.",
+  "author": "Jordan Thiervoz",
+  "license": "MIT",
+  "keywords": [
+    "intersectionobserver",
+    "animations",
+    "scroll",
+    "viewport"
+  ],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "source": "src/cartapus.js",
-  "main": "build/cartapus.js",
-  "module": "build/cartapus.module.js",
-  "unpkg": "build/cartapus.umd.js",
+  "main": "dist/cartapus.js",
+  "umd:main": "dist/cartapus.js",
+  "module": "build/cartapus.mjs",
+  "exports": {
+    "require": "./dist/cartapus.js",
+    "default": "./dist/cartapus.modern.mjs"
+  },
   "scripts": {
-    "clean": "rm -rf build/**",
-    "build": "yarn clean && microbundle --external none",
-    "watch": "microbundle watch --external none",
-    "lint": "eslint src"
+    "dev": "npm-run-all --parallel dev:bundle dev:website",
+    "dev:bundle": "microbundle watch -i src/cartapus.js --format esm --compress --no-sourcemap --no-pkg-main --external none --output ./dist --name 'Cartapus'",
+    "dev:website": "npm run dev:website --prefix ./website",
+    "clean": "rimraf dist",
+    "build": "npm run clean && microbundle --external none && microbundle build -i src/cartapus.js --format umd --compress --no-sourcemap --no-pkg-main --external none --output ./dist --name 'Cartapus' && npm run build:website",
+    "build:website": "npm run build:website --prefix ./website",
+    "lint": "eslint src & npm run lint --prefix ./website"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thiervoj/cartapus.git"
   },
-  "keywords": [
-    "reveal",
-    "animations",
-    "javascript",
-    "scroll",
-    "viewport"
-  ],
-  "author": "Jordan Thiervoz",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/thiervoj/cartapus/issues"
   },
@@ -35,7 +45,9 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "microbundle": "^0.14.0"
+    "microbundle": "^0.15.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^4.1.2"
   },
   "dependencies": {
     "tiny-emitter": "^2.1.0"
