@@ -1,6 +1,6 @@
 {
   "name": "cartapus",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "✨ Animate DOM elements as they appear in your window. A small `IntersectionObserver` wrapper and helper.",
   "author": "Jordan Thiervoz",
   "license": "MIT",
@@ -24,11 +24,11 @@
   },
   "scripts": {
     "dev": "npm-run-all --parallel dev:bundle dev:website",
-    "dev:bundle": "microbundle watch -i src/cartapus.js --format esm --compress --no-sourcemap --no-pkg-main --external none --output ./dist --name 'Cartapus'",
+    "dev:bundle": "microbundle watch -i src/cartapus.js --format esm --compress --no-sourcemap --no-pkg-main --external none --output ./bundled --name 'Cartapus'",
     "dev:website": "npm run dev:website --prefix ./website",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf bundled",
     "build": "npm run clean && microbundle --external none && microbundle build -i src/cartapus.js --format umd --compress --no-sourcemap --no-pkg-main --external none --output ./dist --name 'Cartapus' && npm run build:website",
-    "build:website": "npm run build:website --prefix ./website",
+    "build:website": "microbundle -i src/cartapus.js --format esm --compress --no-sourcemap --no-pkg-main --external none --output ./bundled --name 'Cartapus' && npm run build:website --prefix ./website",
     "lint": "eslint src & npm run lint --prefix ./website"
   },
   "repository": {

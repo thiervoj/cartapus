@@ -13,6 +13,8 @@ cartapus is a library designed to help you manage detection of elements in the b
 
 The goal of cartapus is to provide a **quick** and **easy to use** solution to those who need to **animate/manipulate** elements when they **appear/disappear** from the screen, using the `IntersectionObserver` API.
 
+Cartapus also watches DOM modifications to start observing newly added elements automatically (and also to stop observing freshly removed element) using the `MutationObserver` API.
+
 ## Getting started
 
 ### Install it
@@ -159,19 +161,13 @@ Starts observing **all** `[data-cartapus]` elements.
 
 > This method triggers instantly the `events` for **every** element.
 
-### `.reset()`
-
-Destroys the instance, clears all `[data-cartapus]` elements, then initializes the instance again with newly fetched `[data-cartapus]` elements.
-
-This is useful to refresh the list of observed elements in case they changed.
-
-> This methods triggers instantly the `events` for **every** new element.
-
 ## Browser support
 
-Cartapus supports **all recent major versions** of the following modern browsers
+Cartapus supports **all recent major versions** of the modern browsers.
 
-Internally, Cartapus uses the `IntersectionObserver` API to observe elements. You can have more details about compatibility by consulting [CanIuse](https://caniuse.com/#feat=intersectionobserver).
+Internally, Cartapus uses the `IntersectionObserver` and `MutationObserver` APIs to observe elements. You can have more details about compatibility by consulting CanIuse :
+- [IntersectionObserver](https://caniuse.com/#feat=intersectionobserver).
+- [MutationObserver](https://caniuse.com/#feat=mutationobserver).
 
 ## Todo
 

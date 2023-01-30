@@ -37,8 +37,8 @@ export default class Cartapus extends Emitter {
   constructor(options = {}) {
     super()
 
-    // Bind callback method.
     this.intersect = this.intersect.bind(this)
+    this.mutate = this.mutate.bind(this)
 
     // Set user options based on default options.
     const defaults = {
@@ -53,21 +53,9 @@ export default class Cartapus extends Emitter {
     // Creates the main IntersectionObserver used with the default options.
     this.observers = [this.createObserver()]
 
-    this.getElems()
     this.createObservers()
+    this.createMutationObserver()
     this.observe()
-  }
-
-  /**
-   * Gets the [data-cartapus] elements from root element.
-   *
-   * @private
-   * @returns {void}
-   */
-  getElems() {
-    const root = this.options.root ? this.options.root : document
-
-    this.elems = root.querySelectorAll('[data-cartapus]')
   }
 
   /**
@@ -78,39 +66,84 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   createObservers() {
-    for (const el of this.elems) {
-      // If element has a custom cartapus attribute.
-      if (el.dataset.cartapusThreshold || el.dataset.cartapusRootMargin) {
+    const root = this.options.root ? this.options.root : document
+    const elems = root.querySelectorAll('[data-cartapus]')
+
+    for (const el of elems) {
+      this.storeNewElement(el)
+    }
+  }
+
+  findObserverForElement(el) {
+    const threshold = el.dataset.cartapusThreshold ? parseFloat(el.dataset.cartapusThreshold) : this.options.threshold
+    const rootMargin = el.dataset.cartapusRootMargin ? el.dataset.cartapusRootMargin : this.options.rootMargin
+
+    // If an observer already exists with the same threshold & the same rootMargin, add element to this observer.
+    const found = this.observers.find((observer) => observer.threshold === threshold && observer.rootMargin === rootMargin)
+
+    return found
+  }
+
+  storeNewElement(el) {
+    if (!el.hasAttribute('data-cartapus')) return false
+
+    // If element has a custom cartapus attribute.
+    if (el.dataset.cartapusThreshold || el.dataset.cartapusRootMargin) {
+      const observer = this.findObserverForElement(el)
+
+      if (observer) {
+        observer.elements.push(el)
+
+        el._cartapus = observer
+      } else {
         const threshold = el.dataset.cartapusThreshold ? parseFloat(el.dataset.cartapusThreshold) : this.options.threshold
         const rootMargin = el.dataset.cartapusRootMargin ? el.dataset.cartapusRootMargin : this.options.rootMargin
 
-        // If an observer already exists with the same threshold & the same rootMargin, add element to this observer.
-        const found = this.observers.find((observer) => observer.threshold === threshold && observer.rootMargin === rootMargin)
+        // If no observer has the same threshold & rootMargin, create a new one with the new options.
+        this.observers.push(this.createObserver({
+          element: el,
+          options: {
+            threshold,
+            rootMargin
+          }
+        }))
+      }
+    } else {
+      this.observers[0].elements.push(el)
 
-        if (found) found.elements.push(el)
-        else {
-          // If no observer has the same threshold & rootMargin, create a new one with the new options.
-          this.observers.push(this.createObserver({
-            element: el,
-            options: {
-              threshold,
-              rootMargin
-            }
-          }))
-        }
-      } else this.observers[0].elements.push(el)
+      el._cartapus = this.observers[0]
     }
+
+    return true
   }
 
   createObserver({ options, element } = {}) {
     const opt = Object.assign(this.options, options)
-
-    return {
+    const observer = {
       observer: new IntersectionObserver(this.intersect, opt),
       threshold: opt.threshold,
       rootMargin: opt.rootMargin,
       elements: element ? [element] : []
     }
+
+    if (element) element._cartapus = observer
+
+    return observer
+  }
+
+  /**
+   * Creates the MutationObserver.
+   *
+   * @private
+   * @returns {void}
+   */
+  createMutationObserver() {
+    this.mutationObserver = new MutationObserver(this.mutate)
+
+    this.mutationObserver.observe(this.options.root ? this.options.root : document.body, {
+      childList: true,
+      subtree: true
+    })
   }
 
   /**
@@ -161,6 +194,27 @@ export default class Cartapus extends Emitter {
     this.emit('intersect', detail)
   }
 
+  mutate(records) {
+    for (const record of records) {
+      if (record.type === 'childList') {
+        for (const addedNode of record.addedNodes) {
+          const success = this.storeNewElement(addedNode)
+
+          if (success) addedNode._cartapus.observer.observe(addedNode)
+        }
+
+        for (const removedNode of record.removedNodes) {
+          if (removedNode._cartapus) {
+            const index = removedNode._cartapus.elements.indexOf(removedNode)
+
+            removedNode._cartapus.elements.splice(index, 1)
+            removedNode._cartapus.observer.unobserve(removedNode)
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Turns on all the observers to watch all of their related targets.
    *
@@ -172,8 +226,6 @@ export default class Cartapus extends Emitter {
   observe() {
     for (const observer of this.observers) {
       for (const el of observer.elements) {
-        el._cartapus = observer
-
         observer.observer.observe(el)
       }
     }
@@ -201,24 +253,15 @@ export default class Cartapus extends Emitter {
    */
   destroy() {
     this.unobserve()
+    this.mutationObserver.disconnect()
 
     for (const observer of this.observers) {
+      for (const el of observer.elements) {
+        delete el._cartapus
+      }
+
       observer.observer.disconnect()
       observer.elements = []
     }
-  }
-
-  /**
-   * Resets everything.
-   * Turns off observers and resets their targets.
-   * Then calls `this.init()` to restart everything with new elements to observe.
-   * This will trigger Cartapus events.
-   *
-   * @public
-   * @returns {void}
-   */
-  reset() {
-    this.destroy()
-    this.init()
   }
 }
