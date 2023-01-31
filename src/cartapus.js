@@ -201,6 +201,14 @@ export default class Cartapus extends Emitter {
           const success = this.storeNewElement(addedNode)
 
           if (success) addedNode._cartapus.observer.observe(addedNode)
+
+          const inners = addedNode.querySelectorAll('[data-cartapus]')
+
+          for (const el of inners) {
+            const success = this.storeNewElement(el)
+
+            if (success && el._cartapus) el._cartapus.observer.observe(el)
+          }
         }
 
         for (const removedNode of record.removedNodes) {
@@ -209,6 +217,17 @@ export default class Cartapus extends Emitter {
 
             removedNode._cartapus.elements.splice(index, 1)
             removedNode._cartapus.observer.unobserve(removedNode)
+          }
+
+          const inners = removedNode.querySelectorAll('[data-cartapus]')
+
+          for (const el of inners) {
+            if (el._cartapus) {
+              const index = el._cartapus.elements.indexOf(el)
+
+              el._cartapus.elements.splice(index, 1)
+              el._cartapus.observer.unobserve(el)
+            }
           }
         }
       }

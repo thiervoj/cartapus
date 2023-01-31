@@ -11,24 +11,27 @@ console.log('Ready')
 
 setTimeout(() => {
   const div = document.createElement('div')
+  const div2 = document.createElement('div')
   const p = document.createElement('p')
 
-  div.classList.add('card')
-  div.setAttribute('data-cartapus', '')
+  div.classList.add('yolo')
+  div2.classList.add('card')
+  div2.setAttribute('data-cartapus', '')
   p.textContent = 'Am I visible ?'
 
   console.log('---------')
   console.log('APPEND')
 
-  div.appendChild(p)
+  div.appendChild(div2)
+  div2.appendChild(p)
   wrapper.appendChild(div)
 }, 6000)
 
 setTimeout(() => {
-  const cards = document.querySelectorAll('.card')
+  const test = document.querySelector('.yolo')
 
   console.log('---------')
   console.log('REMOVE')
 
-  cards[cards.length - 1].remove()
-}, 10000)
+  test.remove()
+}, 14000)
