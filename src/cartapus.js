@@ -75,7 +75,16 @@ export default class Cartapus extends Emitter {
     }
   }
 
+  /**
+   * Gets the observer configuration object for the given element.
+   *
+   * @param {Element} el A DOM element.
+   *
+   * @returns {(undefined|Object)} The found observer object, `undefined` if not found.
+   */
   findObserverForElement(el) {
+    if (!el) return
+
     const threshold = el.dataset.cartapusThreshold ? parseFloat(el.dataset.cartapusThreshold) : this.options.threshold
     const rootMargin = el.dataset.cartapusRootMargin ? el.dataset.cartapusRootMargin : this.options.rootMargin
 
@@ -85,6 +94,13 @@ export default class Cartapus extends Emitter {
     return found
   }
 
+  /**
+   * Stores a new DOM element to be watched. Creating a new `IntersectionObserver` if needed.
+   *
+   * @param {Element} el A DOM element.
+   *
+   * @returns {Boolean} True if a new element is being watched, else false.
+   */
   storeNewElement(el) {
     if (!el || !el.hasAttribute || !el.hasAttribute('data-cartapus')) return false
 
@@ -118,6 +134,15 @@ export default class Cartapus extends Emitter {
     return true
   }
 
+  /**
+   * Creates a new `IntersectionObserver` with the given options. Optionally watching a given element.
+   *
+   * @param {(undefined|Object)} param An object containing parameters.
+   * @param {(undefined|Object)} param.options An object containing the `IntersectionObserver` parameters.
+   * @param {(undefined|Element)} param.element A DOM Element to start observing with the newly created observer.
+   *
+   * @returns {Object} An object with the related observer values.
+   */
   createObserver({ options, element } = {}) {
     const opt = Object.assign(this.options, options)
     const observer = {
@@ -200,6 +225,14 @@ export default class Cartapus extends Emitter {
     this.emit('intersect', detail)
   }
 
+  /**
+   * This method is called on every mutation of the DOM.
+   *
+   * @param {Array<MutationRecord>} records A array of MutationRecords.
+   *
+   * @private
+   * @returns {void}
+   */
   mutate(records) {
     for (const record of records) {
       if (record.type === 'childList') {
@@ -280,6 +313,51 @@ export default class Cartapus extends Emitter {
         observer.observer.unobserve(el)
       }
     }
+  }
+
+  /**
+   * Triggers the cartapus events for the given targets. If no targets are given, all the elements will trigger their events.
+   *
+   * @param {(undefined|Array<Element>|Element)} targets - An element or an array of elements.
+   *
+   * @public
+   * @returns {void}
+   */
+  triggerEvents(targets) {
+    if (targets) {
+      const els = Array.isArray(targets) ? targets : [targets]
+
+      for (const el of els) {
+        if (el._cartapus) {
+          el._cartapus.observer.unobserve(el)
+          el._cartapus.observer.observe(el)
+        }
+      }
+
+      return
+    }
+
+    for (const observer of this.observers) {
+      for (const el of observer.elements) {
+        observer.observer.unobserve(el)
+        observer.observer.observe(el)
+      }
+    }
+  }
+
+  /**
+   * Start watching a given Element. Use in case the `data-cartapus` attribute has been added after the Element has been appended to the DOM.
+   *
+   * @param {Element} el A DOM element to start observing.
+   *
+   * @returns {Boolean} Whether the Element is now being observed or not.
+   */
+  add(el) {
+    const success = this.storeNewElement(el)
+
+    if (success) el._cartapus.observer.observe(el)
+
+    return success
   }
 
   /**

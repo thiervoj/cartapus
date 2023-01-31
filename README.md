@@ -144,6 +144,18 @@ Some additional attributes are available to allow both of those cases, overridin
 
 Some methods are available, to turn on/off Cartapus programmatically :
 
+### `.add(el)`
+
+Cartapus watches DOM changes and observes automatically appended elements. But in some cases you may need to start observing an element manually (when a `data-cartapus` attribute has been added after the element being appended,etc).
+
+This method returns `true` if the element is now being watched, `false` if not.
+
+### `.triggerEvents(targets)`
+
+Triggers instantly the cartapus events related to the given elements (can be an array of elements, or a single element).
+
+If `targets` parameter is not given, it triggers the events of **all** observed elements.
+
 ### `.destroy()`
 
 Stops observing **all** `[data-cartapus]` elements. And disconnects all the `IntersectionObservers` along with the `MutationObserver`.
