@@ -1,6 +1,6 @@
 {
   "name": "cartapus",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "✨ Animate DOM elements as they appear in your window. A small `IntersectionObserver` wrapper and helper.",
   "author": "Jordan Thiervoz",
   "license": "MIT",
