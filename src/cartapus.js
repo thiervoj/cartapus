@@ -48,6 +48,7 @@ export default class Cartapus extends Emitter {
       once: false
     }
 
+    this.isObserving = false
     this.options = Object.assign(defaults, options)
 
     // Creates the main IntersectionObserver used with the default options.
@@ -123,7 +124,8 @@ export default class Cartapus extends Emitter {
       observer: new IntersectionObserver(this.intersect, opt),
       threshold: opt.threshold,
       rootMargin: opt.rootMargin,
-      elements: element ? [element] : []
+      elements: element ? [element] : [],
+      once: element && element.hasAttribute('data-cartapus-once') && element.getAttribute('data-cartapus-once') !== 'false' ? true : opt.once
     }
 
     if (element) element._cartapus = observer
@@ -163,8 +165,12 @@ export default class Cartapus extends Emitter {
       if (entry.isIntersecting) {
         entry.target.setAttribute('data-cartapus', 'visible')
 
+        const once = entry.target.getAttribute('data-cartapus-once')
+
+        if (once === 'false') continue
+
         // Stop observing this element if "once" options it true.
-        if (entry.target.hasAttribute('data-cartapus-once')) observer.unobserve(entry.target)
+        if (entry.target._cartapus.once || once !== null) observer.unobserve(entry.target)
       } else entry.target.setAttribute('data-cartapus', 'hidden')
 
       this.dispatch(entry)
@@ -243,6 +249,10 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   observe() {
+    if (this.isObserving) return
+
+    this.isObserving = true
+
     for (const observer of this.observers) {
       for (const el of observer.elements) {
         observer.observer.observe(el)
@@ -257,6 +267,10 @@ export default class Cartapus extends Emitter {
    * @returns {void}
    */
   unobserve() {
+    if (!this.isObserving) return
+
+    this.isObserving = false
+
     for (const observer of this.observers) {
       for (const el of observer.elements) {
         observer.observer.unobserve(el)
