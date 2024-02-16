@@ -3,7 +3,7 @@
 [![bundlephobia](https://img.shields.io/bundlephobia/minzip/cartapus?label=bundle%20size)](https://bundlephobia.com/result?p=cartapus)
 ![NpmLicense](https://img.shields.io/npm/l/cartapus.svg)
 
-✨ Animate DOM elements as they appear in your window. A small `IntersectionObserver` wrapper and helper.
+✨ A small `IntersectionObserver` wrapper and helper to help detect easily DOM elements entering or leaving the viewport.
 
 ## What is cartapus ?
 
@@ -135,8 +135,8 @@ Some additional attributes are available to allow both of those cases, overridin
 ```
 
 - `data-cartapus-threshold` : overrides the `threshold` option. *Ie : this element will be visible when 50% of its height is visible.*
-- `data-cartapus-root-margin` : overrides the `rootMargin` option. *Ie : the bottom bounding box of this element will be shrunk by 200px.*
-- `data-cartapus-once` : overrides the `once` option. *Ie : this element will switch to `visible`, then never switch back to `hidden` again.* To turn off the `once` option, use it like this : `data-cartapus-once="false"`.
+- `data-cartapus-root-margin` : overrides the `rootMargin` option. *Ie : the bottom bounding box of the viewport will be shrunk by 200px on the bottom, as if the viewport was smaller.*
+- `data-cartapus-once` : overrides the `once` option. *Ie : this element will switch to `visible`, then never switch back to `hidden` again.* To explicitly turn off the `once` option, use it like this : `data-cartapus-once="false"`.
 
 ---
 
@@ -146,7 +146,7 @@ Some methods are available, to turn on/off Cartapus programmatically :
 
 ### `.add(el)`
 
-Cartapus watches DOM changes and observes automatically appended elements. But in some cases you may need to start observing an element manually (when a `data-cartapus` attribute has been added after the element being appended,etc).
+Cartapus watches DOM changes and observes automatically appended elements. But in some cases you may need to start observing an element manually (when a `data-cartapus` attribute has been added after the element being appended, etc).
 
 This method returns `true` if the element is now being watched, `false` if not.
 

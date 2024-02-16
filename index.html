@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cartapus website</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Cartapus</h1>
+      <p>To easily check how Cartapus works, you should open your browser inspector and check out the `data-cartapus` attribute for each ".card" element as you scroll.</p>
+
+      <div class="wrapper">
+        <div class="card left" data-cartapus><p>Default config</p></div>
+        <div class="card center"><p>Not watched</p></div>
+        <div class="card right" data-cartapus data-cartapus-once><p>Only watched once</p></div>
+        <div class="card left" data-cartapus data-cartapus-root-margin="25% 0px"><p>25vh around the element</p></div>
+        <div class="card center" data-cartapus data-cartapus-threshold="0.2"><p>20% must be visible</p></div>
+        <div class="card right" data-cartapus><p>Am I visible ?</p></div>
+      </div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

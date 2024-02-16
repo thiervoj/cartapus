@@ -1,0 +1,184 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+
+  &:hover{
+    color: #535bf2;
+  }
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+#app {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 100vh;
+}
+
+.card {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  aspect-ratio: 1 / 1;
+  height: 40vh;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 15vh;
+  position: relative;
+
+  &:hover {
+    border-color: #646cff;
+  }
+
+  p{
+    position: relative;
+    line-height: 1;
+
+    &:before{
+      content: "Not being watched by cartapus";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, 150%);
+      font-size: 16px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  }
+
+  &[data-cartapus] {
+    p {
+      &:before {
+        content: "Not visible ❌";
+      }
+    }
+  }
+
+  &[data-cartapus="visible"] {
+    p {
+      &:before {
+        content: "Visible ✅";
+      }
+    }
+  }
+
+  &.left{
+    margin-right: auto;
+  }
+
+  &.center{
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.right{
+    margin-left: auto;
+  }
+
+  &:nth-child(2) {
+    margin-top: -25vh;
+  }
+
+  &:nth-child(5) {
+    margin-top: -25vh;
+  }
+
+  /* THRESHOLDS */
+  &[data-cartapus] {
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      font-size: 12px;
+      background-color: white;
+    }
+
+    &:before{
+      top: 0;
+      content: "Top threshold";
+    }
+
+    &:after{
+      bottom: 0;
+      content: "Bottom threshold";
+    }
+  }
+
+  &[data-cartapus-root-margin]{
+    &:before{
+      top: -25vh;
+    }
+
+    &:after{
+      bottom: -25vh;
+    }
+  }
+
+  &[data-cartapus-threshold] {
+    &:before{
+      top: 20%;
+    }
+
+    &:after{
+      bottom: 20%;
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  .card {
+    background-color: #f9f9f9;
+  }
+}
