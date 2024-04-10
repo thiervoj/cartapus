@@ -1,11 +1,13 @@
 {
   "name": "cartapus",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/cartapus.umd.cjs",
   "module": "./dist/cartapus.js",
-  "description": "✨ A small `IntersectionObserver` wrapper and helper to help detect easily DOM elements entering or leaving the viewport.",
+  "description": "✨ A small `IntersectionObserver` wrapper helping to detect easily DOM elements entering or leaving the viewport.",
   "author": "Jordan Thiervoz",
   "license": "MIT",
   "sideEffects": false,
@@ -30,10 +32,12 @@
   },
   "homepage": "https://github.com/thiervoj/cartapus#readme",
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
     "eslint-config-standard": "^17.1.0",
-    "postcss-nesting": "^12.0.2",
-    "vite": "^5.1.3"
+    "globals": "^15.0.0",
+    "postcss-nesting": "^12.1.1",
+    "vite": "^5.2.8"
   },
   "dependencies": {
     "tiny-emitter": "^2.1.0"

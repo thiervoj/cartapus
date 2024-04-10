@@ -198,7 +198,7 @@ class P extends S {
         o.observer.unobserve(i), o.observer.observe(i);
   }
   /**
-   * Start watching a given Element. Use in case the `data-cartapus` attribute has been added after the Element has been appended to the DOM.
+   * Start watching a given Element. Use this method if the `data-cartapus` attribute has been added after the Element has been appended to the DOM.
    *
    * @param {Element} el A DOM element to start observing.
    *
