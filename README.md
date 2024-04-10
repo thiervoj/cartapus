@@ -3,7 +3,7 @@
 [![bundlephobia](https://img.shields.io/bundlephobia/minzip/cartapus?label=bundle%20size)](https://bundlephobia.com/result?p=cartapus)
 ![NpmLicense](https://img.shields.io/npm/l/cartapus.svg)
 
-✨ A small `IntersectionObserver` wrapper and helper to help detect easily DOM elements entering or leaving the viewport.
+✨ A small `IntersectionObserver` wrapper helping to detect easily DOM elements entering or leaving the viewport.
 
 ## What is cartapus ?
 
