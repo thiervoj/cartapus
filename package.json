@@ -37,7 +37,7 @@
     "eslint-config-standard": "^17.1.0",
     "globals": "^15.0.0",
     "postcss-nesting": "^12.1.1",
-    "vite": "^5.2.8"
+    "vite": "^6.2.3"
   },
   "dependencies": {
     "tiny-emitter": "^2.1.0"
